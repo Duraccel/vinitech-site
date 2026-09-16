@@ -62,6 +62,20 @@
     });
     $('.plan-slot').append(button);
   }
+  function waitForRetry(seconds, signal) {
+    return new Promise((resolve, reject) => {
+      const cancelled = () => {
+        clearTimeout(timer);
+        reject(new DOMException('Conversa interrompida.', 'AbortError'));
+      };
+      const timer = setTimeout(() => {
+        signal.removeEventListener('abort', cancelled);
+        resolve();
+      }, seconds * 1000);
+      if (signal.aborted) cancelled();
+      else signal.addEventListener('abort', cancelled, {once: true});
+    });
+  }
   async function send(value) {
     const text = value.trim(); if (!text || busy) return;
     if (text.length > 1200) { status.textContent = 'Use até 1.200 caracteres.'; return; }
@@ -69,22 +83,36 @@
     suggest([]); showPlan(null); message(text, 'user'); status.textContent = 'Negan está preparando uma resposta…';
     const pending = [...history.slice(-14), {role: 'user', content: text}];
     controller = new AbortController(); const current = controller;
-    const timeout = setTimeout(() => current.abort(), 28000);
     try {
-      const response = await fetch('/api/negan', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({messages: pending}), signal: current.signal});
-      const data = await response.json();
-      if (!response.ok || typeof data.reply !== 'string') throw new Error(data.error || 'Não consegui responder agora. Tente novamente ou fale com a equipe.');
-      if (controller !== current) return;
-      history = [...pending, {role: 'assistant', content: data.reply}]; message(data.reply, 'assistant');
-      status.textContent = data.mode === 'guided' ? 'Respostas guiadas · atendimento personalizado com a equipe.' : 'Resposta gerada por IA. Confira as condições antes de contratar.';
-      showPlan(data.plan); suggest(Array.isArray(data.actions) ? data.actions.filter(x => typeof x === 'string').slice(0, 3) : []);
-      event('answered', {mode: data.mode});
+      for (let attempt = 0; ; attempt++) {
+        const timeout = setTimeout(() => current.abort(), 28000);
+        let response, data;
+        try {
+          response = await fetch('/api/negan', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({messages: pending}), signal: current.signal});
+          data = await response.json();
+        } finally { clearTimeout(timeout); }
+        if (controller !== current) return;
+        if (response.status === 429 && data.code === 'ai_rate_limited') {
+          const seconds = Number.isFinite(data.retryAfter) && data.retryAfter > 0 ? Math.ceil(data.retryAfter) : 60;
+          if (attempt >= 2 || seconds > 120) throw new Error(data.error || 'A IA continua ocupada. Tente novamente mais tarde ou fale com a equipe.');
+          status.textContent = `A IA está com muitas solicitações. Vou tentar novamente em ${seconds} segundos…`;
+          await waitForRetry(seconds, current.signal);
+          if (controller !== current) return;
+          status.textContent = 'Negan está preparando uma resposta…';
+          continue;
+        }
+        if (!response.ok || typeof data.reply !== 'string') throw new Error(data.error || 'Não consegui responder agora. Tente novamente ou fale com a equipe.');
+        history = [...pending, {role: 'assistant', content: data.reply}]; message(data.reply, 'assistant');
+        status.textContent = data.mode === 'guided' ? 'Respostas guiadas · atendimento personalizado com a equipe.' : 'Resposta gerada por IA. Confira as condições antes de contratar.';
+        showPlan(data.plan); suggest(Array.isArray(data.actions) ? data.actions.filter(x => typeof x === 'string').slice(0, 3) : []);
+        event('answered', {mode: data.mode});
+        break;
+      }
     } catch (error) {
       if (controller !== current) return;
       status.textContent = error.name === 'AbortError' ? 'A resposta demorou mais que o esperado. Tente novamente ou fale com a equipe.' : error.message;
       input.value = text; suggest(['Comparar planos']);
     } finally {
-      clearTimeout(timeout);
       if (controller === current) { busy = false; $('.send').disabled = false; input.disabled = false; if (!panel.hidden) input.focus(); }
     }
   }
