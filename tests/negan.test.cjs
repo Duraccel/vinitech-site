@@ -1,6 +1,6 @@
 const {test} = require('node:test');
 const assert = require('node:assert/strict');
-const {createHandler, guided, validateMessages} = require('../lib/negan.cjs');
+const {createHandler, guided, validateMessages, retrySeconds} = require('../lib/negan.cjs');
 const messages = content => [{role:'user',content}];
 const env = {AI_GATEWAY_API_KEY:'test-key',NEGAN_MODEL:'test/model',KV_REST_API_URL:'https://redis.example',KV_REST_API_TOKEN:'test-token',NEGAN_RATE_SALT:'test-salt'};
 async function run({body={messages:messages('Comparar planos')}, headers={}, method='POST', config={}, fetcher=async()=>{throw new Error('Unexpected paid call');}}={}) {
@@ -50,8 +50,8 @@ test('formato estrito exige resposta e histórico completo chega ao modelo',asyn
     return {ok:true,json:async()=>({choices:[{message:{content:JSON.stringify({reply:'Você pode avaliar clínicas em São Paulo.',plan:null,handoff:false})}}]})};
   }}); assert.equal(r.data.mode,'ai'); assert.equal(calls,2);
 });
-test('429 e objeto vazio preservam profissão sem repetir chamadas pagas',async()=>{
-  for(const response of [{ok:false,status:429},{ok:true,json:async()=>({choices:[{message:{content:'{}'}}]})},{ok:true,json:async()=>({choices:[{message:{content:'null'}}]})}]) {
+test('objeto vazio preserva profissão sem repetir chamadas pagas',async()=>{
+  for(const response of [{ok:true,json:async()=>({choices:[{message:{content:'{}'}}]})},{ok:true,json:async()=>({choices:[{message:{content:'null'}}]})}]) {
     let calls=0; const r=await run({config:env,body:{messages:messages('Sou técnico de ar condicionado, funciona para mim?')},fetcher:async()=>++calls===1?{ok:true,json:async()=>({result:1})}:response});
     assert.equal(r.data.mode,'guided'); assert.match(r.data.reply,/ar-condicionado/); assert.equal(calls,2);
   }
@@ -61,5 +61,33 @@ test('diagnóstico não contém conversa nem credenciais',async()=>{
   const req={method:'POST',headers:{origin:'https://vinitech.dev.br','content-type':'application/json'},body:{messages:messages('texto privado')}};
   const res={setHeader(){},status(){return this;},json(){return this;}};
   await createHandler(env,async()=>++calls===1?{ok:true,json:async()=>({result:1})}:{ok:false,status:429},e=>events.push(e))(req,res);
-  assert.deepEqual(events,[{event:'negan_fallback',reason:'provider_http',status:429}]);
+  assert.deepEqual(events,[{event:'negan_rate_limited',status:429,retryAfter:60}]);
+});
+
+test('limite do provedor orienta espera sem substituir conversa por resposta guiada',async()=>{
+  for(const [header,expected] of [['25',25],[null,60],['inválido',60],['0',1],['180',180]]) {
+    let calls=0;
+    const r=await run({config:env,fetcher:async()=>++calls===1?{ok:true,json:async()=>({result:1})}:{ok:false,status:429,headers:{get:()=>header}}});
+    assert.equal(r.code,429); assert.equal(r.data.code,'ai_rate_limited');
+    assert.equal(r.data.retryAfter,expected); assert.equal(r.headers['Retry-After'],String(expected));
+    assert.equal(r.data.reply,undefined); assert.equal(r.data.mode,undefined); assert.equal(calls,2);
+  }
+});
+test('Retry-After aceita segundos e data sem abreviar prazo do provedor',()=>{
+  const now=Date.parse('2026-09-16T16:00:00Z');
+  assert.equal(retrySeconds('Wed, 16 Sep 2026 16:01:10 GMT',now),70);
+  assert.equal(retrySeconds('2.5',now),3); assert.equal(retrySeconds('',now),60);
+});
+test('quarta até oitava pergunta seguem para IA com histórico',async()=>{
+  const list=[];
+  for(let turn=1;turn<=8;turn++) {
+    list.push({role:'user',content:turn===1?'Sou técnico de ar-condicionado em São Paulo':`Pergunta ${turn}`});
+    let calls=0;
+    const r=await run({config:env,body:{messages:list},fetcher:async(url,opts)=>{
+      if(++calls===1)return {ok:true,json:async()=>({result:turn})};
+      assert.deepEqual(JSON.parse(opts.body).messages.slice(1),list);
+      return {ok:true,json:async()=>({choices:[{message:{content:JSON.stringify({reply:`Resposta ${turn}`,plan:null,handoff:false})}}]})};
+    }});
+    assert.equal(r.data.mode,'ai'); list.push({role:'assistant',content:r.data.reply});
+  }
 });
