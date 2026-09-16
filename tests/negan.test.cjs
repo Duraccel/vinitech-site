@@ -23,3 +23,43 @@ test('falha no Redis impede chamada ao modelo',async()=>{let calls=0;const r=awa
 test('modelo recebe prompt e resultado não inclui plano arbitrário',async()=>{let calls=0;const r=await run({config:env,fetcher:async(url,opts)=>{calls++;if(calls===1){assert.ok(!opts.body.includes('unknown'));return {ok:true,json:async()=>({result:1})};}const body=JSON.parse(opts.body);assert.equal(body.messages[0].role,'system');assert.equal(body.model,'test/model');return {ok:true,json:async()=>({choices:[{message:{content:JSON.stringify({reply:'Como posso ajudar?',plan:'free-plan'})}}]})};}});assert.equal(r.data.mode,'ai');assert.equal(r.data.plan,null);});
 test('modelo indisponível ou resposta malformada usa fallback',async()=>{for(const response of [{ok:false},{ok:true,json:async()=>({choices:[{message:{content:'invalid'}}]})}]) {let calls=0;const r=await run({config:env,fetcher:async()=>++calls===1?{ok:true,json:async()=>({result:1})}:response});assert.equal(r.data.mode,'guided');}});
 test('mensagens normalizadas não carregam campos extras',()=>{assert.deepEqual(validateMessages({messages:[{role:'user',content:' oi ',secret:'x'}]}),messages('oi'));});
+
+test('fallback do vídeo responde à profissão sem trocar por TI',()=>{
+  const list=[...messages('Como funciona?'),{role:'assistant',content:'Você pode pesquisar empresas. Quantas pesquisas pretende fazer?'},...messages('sou tecnico de ar condicionado isso funciona para mim ?')];
+  const r=guided(list);
+  assert.match(r.reply,/ar-condicionado/); assert.match(r.reply,/clínicas, lojas e escritórios/);
+  assert.doesNotMatch(r.reply,/quem oferece TI|comparar os planos/); assert.equal(r.plan,null);
+  list.push({role:'assistant',content:r.reply},...messages('Atendo em São Paulo'));
+  const region=guided(list); assert.match(region.reply,/ar-condicionado/); assert.match(region.reply,/Qual desses tipos/);
+  list.push({role:'assistant',content:region.reply},...messages('Clínicas'));
+  assert.match(guided(list).reply,/quantas pesquisas por mês/);
+});
+test('fallback usa apenas profissão do visitante e aceita mudança',()=>{
+  assert.doesNotMatch(guided([...messages('oi'),{role:'assistant',content:'Por exemplo, ar-condicionado'},...messages('Como funciona?')]).reply,/ar-condicionado/);
+  const r=guided([...messages('Sou técnico de ar condicionado'),{role:'assistant',content:'Onde atende?'},...messages('Na verdade trabalho com marketing. Funciona?')]);
+  assert.match(r.reply,/marketing/); assert.doesNotMatch(r.reply,/ar-condicionado/);
+});
+test('formato estrito exige resposta e histórico completo chega ao modelo',async()=>{
+  const list=[...messages('Sou técnico de ar condicionado'),{role:'assistant',content:'Onde atende?'},...messages('São Paulo')];
+  let calls=0;
+  const r=await run({body:{messages:list},config:env,fetcher:async(url,opts)=>{
+    if(++calls===1) return {ok:true,json:async()=>({result:1})};
+    const body=JSON.parse(opts.body); assert.deepEqual(body.messages.slice(1),list);
+    assert.equal(body.response_format.type,'json_schema'); assert.equal(body.response_format.json_schema.strict,true);
+    assert.deepEqual(body.response_format.json_schema.schema.required,['reply','plan','handoff']);
+    return {ok:true,json:async()=>({choices:[{message:{content:JSON.stringify({reply:'Você pode avaliar clínicas em São Paulo.',plan:null,handoff:false})}}]})};
+  }}); assert.equal(r.data.mode,'ai'); assert.equal(calls,2);
+});
+test('429 e objeto vazio preservam profissão sem repetir chamadas pagas',async()=>{
+  for(const response of [{ok:false,status:429},{ok:true,json:async()=>({choices:[{message:{content:'{}'}}]})},{ok:true,json:async()=>({choices:[{message:{content:'null'}}]})}]) {
+    let calls=0; const r=await run({config:env,body:{messages:messages('Sou técnico de ar condicionado, funciona para mim?')},fetcher:async()=>++calls===1?{ok:true,json:async()=>({result:1})}:response});
+    assert.equal(r.data.mode,'guided'); assert.match(r.data.reply,/ar-condicionado/); assert.equal(calls,2);
+  }
+});
+test('diagnóstico não contém conversa nem credenciais',async()=>{
+  const events=[]; let calls=0;
+  const req={method:'POST',headers:{origin:'https://vinitech.dev.br','content-type':'application/json'},body:{messages:messages('texto privado')}};
+  const res={setHeader(){},status(){return this;},json(){return this;}};
+  await createHandler(env,async()=>++calls===1?{ok:true,json:async()=>({result:1})}:{ok:false,status:429},e=>events.push(e))(req,res);
+  assert.deepEqual(events,[{event:'negan_fallback',reason:'provider_http',status:429}]);
+});
