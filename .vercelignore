@@ -1,0 +1,8 @@
+.git
+.env*
+preview
+extrator-original.html
+tests
+scripts
+README.md
+node_modules

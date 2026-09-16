@@ -1,0 +1,6 @@
+{
+  "name": "vinitech-negan",
+  "private": true,
+  "scripts": { "test": "node --test tests/*.test.cjs", "preview": "node scripts/preview.cjs" },
+  "engines": { "node": ">=22" }
+}
