@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Resultado do pagamento — Vini Tech</title>
+  <style>
+    :root{--bg:#0f1720;--surface:#16212c;--line:#293844;--text:#eef2f3;--muted:#aab5bd;--green:#3ddc97;--red:#ff8c8c;--amber:#ffd27a}
+    *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,sans-serif;line-height:1.6}
+    main{width:min(680px,calc(100% - 36px));margin:12vh auto;padding:32px;background:var(--surface);border:1px solid var(--line);border-radius:16px;box-shadow:0 24px 70px #0005}
+    .brand{font-weight:800;letter-spacing:-.02em}.dot{color:var(--green)}.eyebrow{margin:34px 0 10px;color:var(--green);font:600 .75rem ui-monospace,monospace;text-transform:uppercase;letter-spacing:.09em}
+    h1{margin:0 0 16px;font-size:clamp(2rem,6vw,3.2rem);line-height:1.1;letter-spacing:-.03em}p{color:var(--muted);max-width:58ch}.status{font-weight:700}.status.approved{color:var(--green)}.status.rejected{color:var(--red)}.status.pending{color:var(--amber)}
+    .actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px}.button{display:inline-flex;align-items:center;justify-content:center;border-radius:9px;padding:13px 18px;font-weight:800;text-decoration:none;border:1px solid var(--line);color:var(--text)}.button.primary{background:var(--green);border-color:var(--green);color:#07150f}.fine{font-size:.86rem;margin-top:24px}
+  </style>
+</head>
+<body>
+  <main>
+    <div class="brand">vini<span class="dot">.</span>tech</div>
+    <p class="eyebrow" id="eyebrow">Retorno do pagamento</p>
+    <h1 id="title">Verificando o resultado…</h1>
+    <p id="message">Aguarde enquanto exibimos o status informado pelo Mercado Pago.</p>
+    <p class="status" id="status" aria-live="polite"></p>
+    <div class="actions" id="actions"></div>
+    <p class="fine" id="fine">Esta página não fecha sozinha. Se o pagamento estiver pendente, aguarde a confirmação do Mercado Pago antes de tentar novamente.</p>
+  </main>
+  <script>
+    const params = new URLSearchParams(location.search);
+    const provider = (params.get('provider') || '').toLowerCase();
+    const paymentMode = (params.get('mode') || 'subscription').toLowerCase();
+    const title = document.querySelector('#title');
+    const message = document.querySelector('#message');
+    const status = document.querySelector('#status');
+    const actions = document.querySelector('#actions');
+    const fine = document.querySelector('#fine');
+    const addAction = (label, href, primary = false) => {
+      const link = document.createElement('a');
+      link.className = `button${primary ? ' primary' : ''}`;
+      link.href = href;
+      link.textContent = label;
+      actions.appendChild(link);
+    };
+
+    if (provider === 'mercadopago') {
+      document.title = 'Resultado do Mercado Pago — Vini Tech';
+      title.textContent = 'Retorno recebido';
+      message.textContent = paymentMode === 'one_time'
+        ? 'Recebemos o retorno do checkout deste ciclo. O acesso só será liberado depois que o Mercado Pago confirmar o pagamento ao Lead Engine.'
+        : 'Recebemos o retorno do checkout. A assinatura só será liberada depois que o Mercado Pago confirmar o pagamento ao Lead Engine.';
+      status.textContent = 'Status: aguardando confirmação do servidor';
+      status.className = 'status pending';
+      addAction('Voltar aos planos', '/extrator-leads/#comprar');
+      fine.textContent = 'Os parâmetros da URL não são usados como prova de pagamento. Aguarde o e-mail de acesso ou consulte o suporte se a confirmação não chegar.';
+      const purchase = params.get('purchase') || '';
+      const plan = params.get('plan') || '';
+      if (/^[a-z0-9_-]{1,120}$/i.test(purchase) && /^(initial|professional|advanced)$/.test(plan)) {
+        let attempts = 0;
+        const verify = async () => {
+          attempts += 1;
+          try {
+            const response = await fetch(`/api/mercadopago-status?purchase=${encodeURIComponent(purchase)}&plan=${encodeURIComponent(plan)}`, { headers: { Accept: 'application/json' }, cache: 'no-store' });
+            const result = await response.json();
+            if (response.ok && result.state === 'active') {
+              title.textContent = 'Pagamento confirmado';
+              message.textContent = 'Seu acesso foi liberado pelo servidor. Confira o e-mail de convite para entrar no Lead Engine.';
+              status.textContent = 'Status: acesso ativo';
+              status.className = 'status approved';
+              addAction('Acessar o Lead Engine', 'https://app.vinitech.dev.br/login', true);
+              return;
+            }
+            if (response.ok && result.state === 'blocked') {
+              title.textContent = 'Acesso não liberado';
+              message.textContent = 'O servidor não confirmou um pagamento elegível. Consulte o Mercado Pago e fale com o suporte antes de tentar novamente.';
+              status.textContent = 'Status: bloqueado';
+              status.className = 'status rejected';
+              return;
+            }
+          } catch {}
+          if (attempts < 12) setTimeout(verify, 5000);
+        };
+        verify();
+      }
+    } else {
+      document.title = 'Retorno de pagamento — Vini Tech';
+      title.textContent = 'Retorno de pagamento não reconhecido';
+      message.textContent = 'Não conseguimos confirmar o provedor desta tentativa. Volte aos planos e inicie o pagamento pelo Mercado Pago.';
+      addAction('Voltar para os planos', '/extrator-leads/#comprar', true);
+      fine.textContent = 'Nenhum acesso é liberado sem a confirmação segura do Mercado Pago.';
+    }
+  </script>
+</body>
+</html>
