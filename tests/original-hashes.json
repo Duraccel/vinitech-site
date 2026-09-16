@@ -1,0 +1,19 @@
+{
+  "api/create-mercadopago-checkout.js": "355046dd81c5f3cdb19743f37657a3c8a14ca03286bf7c125be4c0bd4772fd8d",
+  "api/create-mercadopago-payment.js": "8921fa80a4c0e2f9bffa9199de8b8b146ca3cfbe190abd4b116184ede3e66f7c",
+  "api/mercadopago-runner.js": "8d00fda15391a955ce70abbc697d0a0d2ce00b04b3c465f47a87cc0848c6b1f0",
+  "api/mercadopago-status.js": "9a158888e21735c5d01d0d296dfce7fb569b4cf2518ce965cdde04e1e4af06b1",
+  "api/mercadopago-webhook.js": "9887fc040d89cbefaf2660798c1888762f3edeb0a9c8d04c30ee13960e70f20c",
+  "api/_mercadopago-checkout.js": "5fa180a9c14c31745755396f932cb7a39e24c19277eb49d003d515bb37b8c69e",
+  "extrator-vendas/assets/checkout.css": "5c12c9782faa22e9243af05766cba291983fbbaeaa04d4feea560d88a5c2ccac",
+  "extrator-vendas/assets/copiloto-demo.mp4": "7c4b57819d7574abd31d3a6a354e6878c4fb96fd5145e602523bc33a6347886f",
+  "extrator-vendas/assets/copiloto-poster.jpg": "749de60126277fa77c7ab16cea484af736956001fb5f81acc4a152b1ef7a4a0c",
+  "extrator-vendas/assets/pagina.css": "ee3329d00c459046fa7aa5c8f1eb0f8af74f0af22e9b9b3143eca4c9df51ca38",
+  "extrator-vendas/assets/roteiro.js": "7dd70f4a30511f989293a3a14a1c332defee593eb2bef9b1d90c9ce4591c0a42",
+  "extrator-vendas/cancelado.html": "0960deb6138c4231959df6f16c7476ad5eaaabfe46cf436e6cf44e296059537a",
+  "extrator-vendas/package.json": "c101511d9b29709825bec26230023897c02e5075537189c0d742bee7399a43dc",
+  "extrator-vendas/sucesso.html": "466079fa61dd833e7279cc71a4e929f3193ddbbedb9f14a244eec32da74a0c63",
+  "privacidade/index.html": "ed44cae22e4346b163e148f13c4000e16f9ac3d67f36f77bce5c13b307da28f2",
+  "logo-com-site.png": "4274a0b5fa033074d3e64b9d5d98b3670bfe66bb25e5978ecd709a40e0c9c739",
+  "vercel.json": "01814b2accbaff6a7ed87ea8e5854288570a9bab6a978358417324baef9b32ee"
+}
