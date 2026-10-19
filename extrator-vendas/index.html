@@ -47,11 +47,11 @@
   <div class="checkout-intro">
     <p class="eyebrow">SEU PRÓXIMO PASSO</p>
     <h2 id="checkout-title">Seu plano.<br>Sua próxima busca.</h2>
-    <p>Confira o plano escolhido e informe os dados para receber o acesso ao Extrator.</p>
+    <p>Confira o plano escolhido. Na pr?xima etapa, confirme seu cadastro e continue para a Cakto.</p>
     <ol class="checkout-steps">
       <li><strong>Confira o plano</strong><span>A franquia de buscas é renovada a cada ciclo mensal.</span></li>
-      <li><strong>Informe seus dados</strong><span>Use o e-mail em que deseja receber o acesso.</span></li>
-      <li><strong>Escolha como pagar</strong><span>Continue para o Mercado Pago para concluir o pagamento.</span></li>
+      <li><strong>Confirme seu cadastro</strong><span>Escolha sua empresa no Extrator e use o mesmo e-mail na Cakto.</span></li>
+      <li><strong>Escolha como pagar</strong><span>Confirme seu cadastro no Extrator e conclua o pagamento na Cakto.</span></li>
     </ol>
     <a class="text-link" href="#planos">Rever os planos <span aria-hidden="true">↑</span></a>
   </div>
@@ -59,30 +59,12 @@
         <span class="offer-label" id="offer-label">PLANO SELECIONADO · INTERMEDIÁRIO</span>
         <div class="price">R$ <span id="offer-price">57,90</span> <small>por mês · até <span id="offer-quota">200</span> buscas</small></div>
         <ul><li>Pesquisa por segmento e região</li><li>Histórico e gestão de oportunidades</li><li>Exportação e membros autorizados</li><li>Até 60 empresas por consulta, conforme a fonte</li></ul>
-        <label for="organization-name" class="offer-label">Empresa ou organização</label>
-        <input id="organization-name" type="text" autocomplete="organization" maxlength="80" placeholder="Nome da sua empresa" required style="width:100%;margin-top:8px;padding:13px;border:1px solid var(--line);border-radius:9px;background:#0f1720;color:var(--text);font:inherit">
-        <label for="contact-name" class="offer-label" style="display:block;margin-top:16px">Nome do responsável</label>
-        <input id="contact-name" type="text" autocomplete="name" maxlength="100" placeholder="Seu nome completo" required style="width:100%;margin-top:8px;padding:13px;border:1px solid var(--line);border-radius:9px;background:#0f1720;color:var(--text);font:inherit">
-        <label for="customer-email" class="offer-label" style="display:block;margin-top:16px">E-mail para receber o acesso</label>
-        <input id="customer-email" type="email" autocomplete="email" placeholder="voce@empresa.com.br" required style="width:100%;margin-top:8px;padding:13px;border:1px solid var(--line);border-radius:9px;background:#0f1720;color:var(--text);font:inherit">
-        <div id="payer-email-wrap">
-          <label for="payer-email" class="offer-label" style="display:block;margin-top:16px">E-mail do pagador no Mercado Pago</label>
-          <input id="payer-email" type="email" autocomplete="email" placeholder="pagador@exemplo.com" required aria-describedby="payer-email-note" style="width:100%;margin-top:8px;padding:13px;border:1px solid var(--line);border-radius:9px;background:#0f1720;color:var(--text);font:inherit">
-          <p class="selection-status" id="payer-email-note">Pode ser diferente do e-mail que receberá o acesso. Se o comprador usa uma conta Mercado Pago, informe o e-mail cadastrado nela.</p>
-        </div>
         <p class="selection-status" id="selection-status" aria-live="polite">Plano Intermediário selecionado.</p>
-        <fieldset class="payment-options" aria-describedby="payment-note">
-          <legend>Forma de pagamento</legend>
-          <label class="payment-option"><input type="radio" name="payment-mode" value="subscription" checked><span><strong>Cartão de crédito</strong><span>Assinatura mensal automática.</span></span></label>
-          <label class="payment-option"><input type="radio" name="payment-mode" value="one_time"><span><strong>Pix, boleto ou débito</strong><span>Pagamento deste ciclo; a renovação será manual.</span></span></label>
-        </fieldset>
-        <label class="payment-option" style="margin-top:16px"><input id="terms-accepted" type="checkbox" required><span><strong>Li e aceito as condições</strong><span>Concordo com as condições de entrega, cobrança e <a href="/privacidade/" target="_blank" rel="noopener" style="color:var(--green)">Política de Privacidade</a>.</span></span></label>
-        <button class="button primary" id="checkout" type="button">Continuar para pagamento</button>
-        <p class="checkout-error" id="checkout-error" role="alert" aria-live="assertive" hidden></p>
-        <p class="note" id="payment-note">Pagamento processado pelo Mercado Pago. Assinatura mensal; a franquia renova a cada ciclo e não acumula inicialmente.</p>
+        <a class="button primary" id="checkout" href="https://app.vinitech.dev.br/comprar?plano=professional">Continuar com a Cakto</a>
+        <p class="note" id="payment-note">Confirme seu e-mail e escolha sua empresa no Extrator. Depois, conclua o pagamento na Cakto, com as opções disponíveis no checkout. Assinatura mensal; a franquia renova a cada ciclo.</p>
       </aside>
 </section>
-    <section class="trust-section"><div class="wrap"><span class="eyebrow">Antes de comprar</span><h2>Transparência para você decidir.</h2><div class="grid"><article class="card"><h3>Para quem é</h3><p>Profissionais, pequenas equipes e agências que precisam estruturar prospecção por segmento e região.</p></article><article class="card"><h3>Limites claros</h3><p>Resultados dependem da disponibilidade da fonte. Não prometemos contatos válidos, leads qualificados, vendas ou conversões.</p></article><article class="card"><h3>Implantação assistida</h3><p>Serviço opcional de R$ 497, com configuração inicial, orientação de até 60 minutos e acompanhamento da primeira operação.</p></article></div></div></section>    <section class="conditions-section" id="politicas"><div class="wrap faq"><span class="eyebrow">Entrega e condições</span><h2>O que acontece depois da compra.</h2><details open><summary>O que eu recebo?</summary><p>Após a confirmação do pagamento pelo Mercado Pago, você recebe acesso ao Lead Engine em <a href="https://app.vinitech.dev.br/" style="color:var(--green)">app.vinitech.dev.br</a>, por convite ou código enviado ao e-mail informado no checkout. O acesso corresponde ao plano escolhido: Inicial (50 buscas/mês), Intermediário (200 buscas/mês) ou Máximo (500 buscas/mês).</p></details><details><summary>Quando o acesso é liberado?</summary><p>A liberação ocorre automaticamente depois que o webhook confirmar o pagamento como aprovado ou autorizado. Pagamentos pendentes, recusados, cancelados ou não reconhecidos não liberam acesso; nesses casos, aguarde a atualização do Mercado Pago ou fale com o suporte.</p></details><details><summary>O que está incluído?</summary><p>O plano inclui o uso do Lead Engine dentro da franquia mensal contratada, histórico, organização de oportunidades e exportação conforme os recursos disponíveis na aplicação. O suporte cobre acesso e uso inicial pelo canal de atendimento da Vini Tech.</p></details><details><summary>Quando o acesso pode ser suspenso?</summary><p>O acesso pode ser bloqueado quando a assinatura é cancelada, fica inadimplente, expira ou é revertida pelo Mercado Pago. A franquia mensal não é promessa de quantidade ou qualidade de leads: os resultados dependem da disponibilidade da fonte consultada.</p></details><details><summary>Como funciona o reembolso?</summary><p>Solicitações de reembolso podem ser feitas em até 7 dias corridos pelo <a href="https://wa.me/5511947342806?text=Olá!%20Quero%20solicitar%20suporte%20sobre%20uma%20compra%20do%20Extrator%20Leads." style="color:var(--green)">WhatsApp da Vini Tech</a>, informando o e-mail da compra e o motivo. A solicitação será analisada conforme o tipo de cobrança, o estado do pagamento e as regras do Mercado Pago. Pagamentos pendentes ou recusados não geram acesso; pagamentos cancelados ou estornados não permanecem ativos. Direitos legais aplicáveis permanecem preservados. Esta política comercial deve passar por revisão profissional antes de ser tratada como orientação jurídica.</p></details><details><summary>O pagamento é seguro?</summary><p>Os dados de pagamento são processados pelo Mercado Pago; o site não coleta nem armazena dados de cartão.</p></details></div></section><section class="wrap closing"><p class="eyebrow">COMECE COM UM RECORTE CLARO.</p><h2>Escolha um segmento.<br>Comece sua busca.</h2><a class="button primary" href="#planos">Escolher meu plano <span aria-hidden="true">↗</span></a></section></main>  <footer class="wrap footer">© <span id="year"></span> Vini Tech · <a href="https://vinitech.dev.br/" style="color:inherit">site institucional</a> · <a href="/privacidade/" style="color:inherit">Política de Privacidade</a></footer>
+    <section class="trust-section"><div class="wrap"><span class="eyebrow">Antes de comprar</span><h2>Transparência para você decidir.</h2><div class="grid"><article class="card"><h3>Para quem é</h3><p>Profissionais, pequenas equipes e agências que precisam estruturar prospecção por segmento e região.</p></article><article class="card"><h3>Limites claros</h3><p>Resultados dependem da disponibilidade da fonte. Não prometemos contatos válidos, leads qualificados, vendas ou conversões.</p></article><article class="card"><h3>Implantação assistida</h3><p>Serviço opcional de R$ 497, com configuração inicial, orientação de até 60 minutos e acompanhamento da primeira operação.</p></article></div></div></section>    <section class="conditions-section" id="politicas"><div class="wrap faq"><span class="eyebrow">Entrega e condições</span><h2>O que acontece depois da compra.</h2><details open><summary>O que eu recebo?</summary><p>Após a confirmação do pagamento pela Cakto, você recebe acesso ao Lead Engine em <a href="https://app.vinitech.dev.br/" style="color:var(--green)">app.vinitech.dev.br</a>, por convite ou código enviado ao e-mail verificado no Extrator (use o mesmo e-mail na Cakto). O acesso corresponde ao plano escolhido: Inicial (50 buscas/mês), Intermediário (200 buscas/mês) ou Máximo (500 buscas/mês).</p></details><details><summary>Quando o acesso é liberado?</summary><p>A liberação depende da confirmação do pagamento e da validação da compra pelo Extrator. Pagamentos pendentes, recusados, cancelados ou não reconhecidos não liberam acesso; nesses casos, aguarde a atualização da Cakto ou fale com o suporte.</p></details><details><summary>O que está incluído?</summary><p>O plano inclui o uso do Lead Engine dentro da franquia mensal contratada, histórico, organização de oportunidades e exportação conforme os recursos disponíveis na aplicação. O suporte cobre acesso e uso inicial pelo canal de atendimento da Vini Tech.</p></details><details><summary>Quando o acesso pode ser suspenso?</summary><p>O cancelamento da renovação preserva o período já pago. O acesso pode ser suspenso quando esse período termina ou quando o pagamento é reembolsado ou contestado. A franquia mensal não é promessa de quantidade ou qualidade de leads: os resultados dependem da disponibilidade da fonte consultada.</p></details><details><summary>Como funciona o reembolso?</summary><p>Solicitações de reembolso podem ser feitas em até 7 dias corridos pelo <a href="https://wa.me/5511947342806?text=Olá!%20Quero%20solicitar%20suporte%20sobre%20uma%20compra%20do%20Extrator%20Leads." style="color:var(--green)">WhatsApp da Vini Tech</a>, informando o e-mail da compra e o motivo. A solicitação será analisada conforme o tipo de cobrança, o estado do pagamento e as regras da Cakto. Pagamentos pendentes ou recusados não geram acesso; pagamentos cancelados ou estornados não permanecem ativos. Direitos legais aplicáveis permanecem preservados. Esta política comercial deve passar por revisão profissional antes de ser tratada como orientação jurídica.</p></details><details><summary>O pagamento é seguro?</summary><p>Os dados de pagamento são processados pela Cakto; o site não coleta nem armazena dados de cartão.</p></details></div></section><section class="wrap closing"><p class="eyebrow">COMECE COM UM RECORTE CLARO.</p><h2>Escolha um segmento.<br>Comece sua busca.</h2><a class="button primary" href="#planos">Escolher meu plano <span aria-hidden="true">↗</span></a></section></main>  <footer class="wrap footer">© <span id="year"></span> Vini Tech · <a href="https://vinitech.dev.br/" style="color:inherit">site institucional</a> · <a href="/privacidade/" style="color:inherit">Política de Privacidade</a></footer>
   <script>
     document.querySelector('#year').textContent = new Date().getFullYear();
     const plans = Object.freeze({
@@ -91,7 +73,6 @@
       advanced: { name: 'Máximo', amount: 97.90, quota: 500 },
     });
     let selectedPlan = 'professional';
-    let selectedPaymentMode = 'subscription';
     function selectPlan(planKey) {
       const plan = plans[planKey];
       if (!plan) return;
@@ -106,102 +87,9 @@
         planButton.setAttribute('aria-pressed', String(isSelected));
       });
       document.querySelector('#comprar').scrollIntoView({ behavior: 'smooth', block: 'center' });
-      document.querySelector('#customer-email').focus({ preventScroll: true });
+      document.querySelector('#checkout').href = `https://app.vinitech.dev.br/comprar?plano=${planKey}`;
     }
-    function selectPaymentMode(mode) {
-      selectedPaymentMode = mode === 'one_time' ? 'one_time' : 'subscription';
-      const payerEmailWrap = document.querySelector('#payer-email-wrap');
-      const payerEmailField = document.querySelector('#payer-email');
-      const isSubscription = selectedPaymentMode === 'subscription';
-      payerEmailWrap.hidden = !isSubscription;
-      payerEmailField.required = isSubscription;
-      document.querySelector('#payment-note').textContent = selectedPaymentMode === 'one_time'
-        ? 'Pagamento de um ciclo via Mercado Pago. Pix, boleto e débito aparecem conforme a disponibilidade da sua conta. O acesso só é liberado após a aprovação; a renovação será manual.'
-        : 'Assinatura mensal no cartão pelo Mercado Pago. Informe abaixo o e-mail do pagador; ele pode ser diferente do e-mail de acesso.';
-    }
-    async function startCheckout(plan = selectedPlan) {
-      const button = document.querySelector('#checkout');
-      const errorField = document.querySelector('#checkout-error');
-      const deliveryEmailField = document.querySelector('#customer-email');
-      const organizationNameField = document.querySelector('#organization-name');
-      const contactNameField = document.querySelector('#contact-name');
-      const termsField = document.querySelector('#terms-accepted');
-      const payerEmailField = document.querySelector('#payer-email');
-      const defaultLabel = 'Continuar para pagamento';
-      button.disabled = true;
-      button.textContent = 'Preparando pagamento…';
-      errorField.hidden = true;
-      errorField.textContent = '';
-      if (!organizationNameField.checkValidity()) {
-        organizationNameField.reportValidity();
-        button.disabled = false;
-        button.textContent = defaultLabel;
-        return;
-      }
-      if (!contactNameField.checkValidity()) {
-        contactNameField.reportValidity();
-        button.disabled = false;
-        button.textContent = defaultLabel;
-        return;
-      }
-      const deliveryEmail = deliveryEmailField.value.trim();
-      if (!deliveryEmailField.checkValidity()) {
-        deliveryEmailField.reportValidity();
-        button.disabled = false;
-        button.textContent = defaultLabel;
-        return;
-      }
-      const payerEmail = payerEmailField.value.trim();
-      if (selectedPaymentMode === 'subscription' && !payerEmailField.checkValidity()) {
-        payerEmailField.reportValidity();
-        button.disabled = false;
-        button.textContent = defaultLabel;
-        return;
-      }
-      if (!termsField.checkValidity()) {
-        termsField.reportValidity();
-        button.disabled = false;
-        button.textContent = defaultLabel;
-        return;
-      }
-      let redirecting = false;
-      try {
-        const endpoint = selectedPaymentMode === 'one_time' ? '/api/create-mercadopago-payment' : '/api/create-mercadopago-checkout';
-        const payload = {
-          plan,
-          delivery_email: deliveryEmail,
-          organization_name: organizationNameField.value.trim(),
-          contact_name: contactNameField.value.trim(),
-          terms_accepted: termsField.checked,
-        };
-        if (selectedPaymentMode === 'subscription') payload.payer_email = payerEmail;
-        const controller = new AbortController();
-        const timeout = window.setTimeout(() => controller.abort(), 15000);
-        let response;
-        try {
-          response = await fetch(endpoint, {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload),signal:controller.signal});
-        } finally {
-          window.clearTimeout(timeout);
-        }
-        const data = await response.json().catch(() => ({}));
-        if (!response.ok || typeof data.url !== 'string' || !data.url) throw new Error(data.error || 'O checkout temporariamente não pôde ser iniciado. Tente novamente em instantes.');
-        redirecting = true;
-        window.location.href = data.url;
-      } catch (error) {
-        errorField.textContent = error instanceof Error && error.name === 'AbortError'
-          ? 'O checkout demorou mais que o esperado. Confirme se nenhuma nova página foi aberta antes de tentar novamente.'
-          : error instanceof Error ? error.message : 'O checkout temporariamente não pôde ser iniciado. Tente novamente em instantes.';
-        errorField.hidden = false;
-      } finally {
-        if (!redirecting) {
-          button.disabled = false;
-          button.textContent = defaultLabel;
-        }
-      }
-    }
-    document.querySelector('#checkout').addEventListener('click', () => startCheckout());
-    document.querySelectorAll('.plan-button').forEach((planButton) => planButton.addEventListener('click', () => selectPlan(planButton.dataset.plan)));
-    document.querySelectorAll('input[name="payment-mode"]').forEach((input) => input.addEventListener('change', () => selectPaymentMode(input.value)));
+    document.querySelectorAll('.plan-button').forEach((button) => button.addEventListener('click', () => selectPlan(button.dataset.plan)));
   </script>
 <script src="/extrator-vendas/assets/roteiro.js"></script>
   <script src="/assets/negan.js" defer></script>
