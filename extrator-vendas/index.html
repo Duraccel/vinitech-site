@@ -122,7 +122,7 @@
 
         <p class="selection-status" id="selection-status" aria-live="polite">Plano Intermediário selecionado.</p>
         <a class="button primary" id="checkout" href="https://app.vinitech.dev.br/comprar?plano=professional">Continuar com a Cakto</a>
-        <p class="note" id="payment-note">Confirme seu e-mail e escolha sua empresa no Extrator. Depois, conclua o pagamento na Cakto, com as opções disponíveis no checkout. Assinatura mensal; a franquia renova a cada ciclo.</p>
+        <p class="note" id="payment-note">Confirme seu e-mail e escolha sua empresa no Extrator. Depois, conclua o pagamento na Cakto, com as opções disponíveis no checkout. Assinatura mensal. Confira a franquia e o saldo no Extrator. A Cakto informa no checkout as opções disponíveis e eventuais taxas de serviço.</p>
       </aside>
 
 </section>
@@ -149,6 +149,7 @@
         const isSelected = planButton.dataset.plan === planKey;
         planButton.classList.toggle('selected', isSelected);
         planButton.setAttribute('aria-pressed', String(isSelected));
+        planButton.setAttribute('aria-checked', String(isSelected));
       });
       document.querySelector('#comprar').scrollIntoView({ behavior: 'smooth', block: 'center' });
       document.querySelector('#checkout').href = `https://app.vinitech.dev.br/comprar?plano=${planKey}`;
